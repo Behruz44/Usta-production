@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate, useSearchParams, useParams } from 'react-router-dom'
 import { Menu, Search, MapPin, Phone, Globe, Clock, ChevronRight, Heart, X, Send, MessageCircle, Grid, Lock } from 'lucide-react'
 import gsap from 'gsap'
@@ -840,8 +840,8 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
             <div className="trust-icon">
               🚚
             </div>
-            <div className="trust-title">Быстрая доставка</div>
-            <div className="trust-desc">Доставим товар в течение 24–48 часов по Ошу и области</div>
+            <div className="trust-title">качественный товар 100%</div>
+            <div className="trust-desc">Доставляем смотря когда вам удобно и когда удобно</div>
           </div>
           <div className="trust-card reveal" data-num="02" style={{ animationDelay: '0.1s' }}>
             <div className="trust-icon">
@@ -872,8 +872,12 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           <div>
             <div className="footer-logo">УС<span>ТА</span></div>
             <div className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</div>
-            <div className="footer-contact"><MapPin size={14} /> Ош, ул. Строительная, 12</div>
-            <div className="footer-contact"><Phone size={14} /> +996 312 00-00-00</div>
+          </div>
+          <div>
+            <div className="footer-col-title">Связь</div>
+            <a className="footer-link" href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a className="footer-link" href={buildTelegramLink()} target="_blank" rel="noreferrer">Telegram</a>
+            <a className="footer-link" href={`tel:${PHONE}`}>Позвонить</a>
           </div>
           <div>
             <div className="footer-col-title">Каталог</div>
@@ -887,24 +891,12 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
             <Link className="footer-link" to="#about">О нас</Link>
             <Link className="footer-link" to="#delivery">Доставка</Link>
             <Link className="footer-link" to="#">Гарантия</Link>
-            <Link className="footer-link" to="#contacts">Контакты</Link>
           </div>
           <div id="delivery">
             <div className="footer-col-title">Доставка</div>
             <div className="footer-desc" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: '1.6' }}>
               Доставляем по Ошу и области в течение 24-48 часов. Бесплатная доставка при заказе от 10,000 сом.
             </div>
-          </div>
-          <div id="contacts">
-            <div className="footer-col-title">Контакты</div>
-            <div className="footer-contact"><MapPin size={14} /> Ош, ул. Строительная, 12</div>
-            <div className="footer-contact"><Phone size={14} /> +996 312 00-00-00</div>
-          </div>
-          <div>
-            <div className="footer-col-title">Связь</div>
-            <a className="footer-link" href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noreferrer">WhatsApp</a>
-            <a className="footer-link" href={buildTelegramLink()} target="_blank" rel="noreferrer">Telegram</a>
-            <a className="footer-link" href={`tel:${PHONE}`}>Позвонить</a>
           </div>
         </div>
         <div className="footer-bottom">
@@ -1017,12 +1009,24 @@ function CatalogPage({ language, setLanguage, translations }) {
       .finally(() => setLoading(false))
   }, [])
 
+  const handleCategoryFilter = useCallback((category) => {
+    setActiveCategory(category)
+    if (category === 'all') {
+      setProducts(allProductsRef.current)
+    } else {
+      const filtered = allProductsRef.current.filter(p => {
+        return isProductInCategory(p, category)
+      })
+      setProducts(filtered)
+    }
+  }, [])
+
   // Apply category filter from URL
   useEffect(() => {
     if (categoryFromUrl && products.length > 0) {
       handleCategoryFilter(categoryFromUrl)
     }
-  }, [categoryFromUrl, products.length])
+  }, [categoryFromUrl, products.length, handleCategoryFilter])
 
   const handleProductClick = (product) => {
     setSelectedProduct(product)
@@ -1073,18 +1077,6 @@ function CatalogPage({ language, setLanguage, translations }) {
     return p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       categoryName?.toLowerCase().includes(searchQuery.toLowerCase())
   }).slice(0, 5)
-
-  const handleCategoryFilter = (category) => {
-    setActiveCategory(category)
-    if (category === 'all') {
-      setProducts(allProductsRef.current)
-    } else {
-      const filtered = allProductsRef.current.filter(p => {
-        return isProductInCategory(p, category)
-      })
-      setProducts(filtered)
-    }
-  }
 
   useEffect(() => {
     const handleClickOutside = (e) => {
