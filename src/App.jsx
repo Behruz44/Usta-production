@@ -9,10 +9,10 @@ import './App.css'
 import { api } from './services/api'
 
 // Contact constants — edit here once to update everywhere
-const PHONE = '+996312000000'
-const PHONE_LABEL = '+996 312 00-00-00'
-const WA_NUMBER = '996312000000'
-const TG_USERNAME = 'usta_osh'
+const PHONE = '+996552107036'
+const PHONE_LABEL = '+996 552 10-70-36'
+const WA_NUMBER = '996552107036'
+const TG_USERNAME = 'moonyx11'
 
 function useDebounce(value, delay = 300) {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -89,6 +89,8 @@ const iconToEmoji = (icon) => {
     'Building': '🏗️',
     'Layers': '🧱',
     'Box': '📦',
+    'Palette': '🎨',
+    'Tool': '🔧',
   }
   return mapping[icon] || icon || '📦'
 }
@@ -97,6 +99,41 @@ const getLang = (obj, field, lang) => {
   if (!obj) return ''
   if (lang === 'kg') return obj[field + 'Kg'] || obj[field + 'Ru'] || obj[field] || ''
   return obj[field + 'Ru'] || obj[field] || ''
+}
+
+// Category ID to name mapping (correct names)
+const CATEGORY_ID_TO_NAME = {
+  1: 'Гипсокартон',
+  2: 'Сухие смеси',
+  3: 'Саморезы',
+  4: 'Профиль',
+  6: 'Инструменты',
+  7: 'Краски',
+  8: 'Утеплители',
+  9: 'Водоэмульсионная краска',
+}
+
+// Category ID to icon mapping
+const CATEGORY_ID_TO_ICON = {
+  1: 'Sheet',
+  2: 'Package',
+  3: 'Wrench',
+  4: 'Ruler',
+  6: 'Tool',
+  7: 'Palette',
+  8: 'Layers',
+  9: 'Paintbrush',
+}
+
+// Category order for display
+const CATEGORY_ORDER = [9, 7, 8, 1, 2, 3, 4, 6] // Водоэмульсионная краска, Краски, Утеплители, Гипсокартон, Сухие смеси, Саморезы, Профиль, Инструменты
+
+const getCategoryNameById = (categoryId) => {
+  return CATEGORY_ID_TO_NAME[Number(categoryId)] || ''
+}
+
+const getCategoryIconById = (categoryId) => {
+  return CATEGORY_ID_TO_ICON[Number(categoryId)] || 'Package'
 }
 
 // Protected Route Component
@@ -222,26 +259,25 @@ const translations = {
 }
 
 function App() {
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false)
-  const [language, setLanguage] = useState('ru')
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage setMegaMenuOpen={setMegaMenuOpen} megaMenuOpen={megaMenuOpen} language={language} setLanguage={setLanguage} translations={translations} />} />
-        <Route path="/catalog" element={<CatalogPage language={language} setLanguage={setLanguage} translations={translations} />} />
-        <Route path="/product/:id" element={<ProductDetailPage language={language} setLanguage={setLanguage} translations={translations} />} />
-        <Route path="/login" element={<LoginPage language={language} translations={translations} />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   )
 }
 
-function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, translations }) {
+function HomePage() {
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false)
+  const [language, setLanguage] = useState('ru')
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
-  const [contactDropdownOpen, setContactDropdownOpen] = useState(false)
   const [addressDropdownOpen, setAddressDropdownOpen] = useState(false)
-  const [statsAnimated, setStatsAnimated] = useState(false)
+  const [contactDropdownOpen, setContactDropdownOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -251,21 +287,32 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
+  const [statsAnimated, setStatsAnimated] = useState(false)
   const navigate = useNavigate()
   const { toggle: toggleFav, isFav } = useFavorites()
 
   // Fetch all data in one shot — no race condition
   useEffect(() => {
-    Promise.all([api.getCategories(), api.getProducts({ limit: 500, sort: 'id', order: 'ASC' })])
+    Promise.all([api.getCategories(), api.getProducts({ limit: 50, sort: 'id', order: 'ASC' })])
       .then(([cats, productsData]) => {
         const list = productsData.products || productsData
         const result = Array.isArray(list) ? list : []
         setProducts(result)
         setLoadError(null)
-        setCategories(cats.map(cat => ({
+        // Map categories with correct names, icons, and order
+        const mappedCategories = cats.map(cat => ({
           ...cat,
-          count: result.filter(p => isProductInCategory(p, cat)).length
-        })))
+          name: getCategoryNameById(cat.id) || cat.name,
+          icon: getCategoryIconById(cat.id) || cat.icon,
+          count: result.filter(p => Number(p.categoryId) === Number(cat.id)).length
+        }))
+        // Sort by CATEGORY_ORDER
+        const sortedCategories = mappedCategories.sort((a, b) => {
+          const aIndex = CATEGORY_ORDER.indexOf(Number(a.id))
+          const bIndex = CATEGORY_ORDER.indexOf(Number(b.id))
+          return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex)
+        })
+        setCategories(sortedCategories)
       })
       .catch(error => {
         console.error('Failed to load home data:', error)
@@ -466,7 +513,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
             <a href="#about">{t.about}</a>
             <a href="#delivery">{t.delivery}</a>
             <a href="#contacts">{t.contacts}</a>
-            <span className="topbar-phone">+996 312 00-00-00</span>
+            <span className="topbar-phone">{PHONE_LABEL}</span>
             <div className="language-switcher" onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}>
               <Globe size={12} />
               {language === 'ru' ? 'RU' : 'KG'}
@@ -483,8 +530,12 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
 
       <header>
         <div className="header-inner">
+          <button className="mobile-burger-btn" onClick={() => setMobileMenuOpen(true)}>
+            <Menu size={24} />
+          </button>
+
           <Link to="/" className="logo">
-            <span className="logo-us">УС</span><span className="logo-ta">ТА</span>
+            <img src="/logo.jpg" alt="Alina Paint" style={{ height: '40px', width: 'auto' }} />
           </Link>
 
           <div className="search-wrap">
@@ -615,12 +666,12 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           <div className="hero-left">
             <div className="hero-pill reveal">
               <span className="hero-pill-dot"></span>
-              Официальный дилер KNAUF
+              Официальный дилер Alina Paint
             </div>
             <h1 className="reveal" style={{ animationDelay: '0.1s' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <span style={{ fontSize: '48px' }}>🏠</span>
-                <span>Ecodom —<br /><em>строительные</em><br />материалы в Оше</span>
+                <span style={{ fontSize: 'clamp(32px, 6vw, 48px)' }}>🏠</span>
+                <span>Alina Paint —<br /><em>строительные</em><br />материалы в Оше</span>
               </span>
             </h1>
             <p className="hero-sub reveal" style={{ animationDelay: '0.2s' }}>
@@ -866,10 +917,12 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
       <footer>
         <div className="footer-inner">
           <div>
-            <div className="footer-logo">УС<span>ТА</span></div>
+            <div className="footer-logo">
+              <img src="/logo.jpg" alt="Alina Paint" style={{ height: '50px', width: 'auto' }} />
+            </div>
             <div className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</div>
             <div className="footer-contact"><MapPin size={14} /> Ош, ул. Строительная, 12</div>
-            <div className="footer-contact"><Phone size={14} /> +996 312 00-00-00</div>
+            <div className="footer-contact"><Phone size={14} /> {PHONE_LABEL}</div>
           </div>
           <div>
             <div className="footer-col-title">Каталог</div>
@@ -894,7 +947,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           <div id="contacts">
             <div className="footer-col-title">Контакты</div>
             <div className="footer-contact"><MapPin size={14} /> Ош, ул. Строительная, 12</div>
-            <div className="footer-contact"><Phone size={14} /> +996 312 00-00-00</div>
+            <div className="footer-contact"><Phone size={14} /> {PHONE_LABEL}</div>
           </div>
           <div>
             <div className="footer-col-title">Связь</div>
@@ -908,6 +961,44 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           <span>Строительные материалы оптом и в розницу</span>
         </div>
       </footer>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-header">
+              <Link to="/" className="mobile-menu-logo" onClick={() => setMobileMenuOpen(false)}>
+                <img src="/logo.jpg" alt="Alina Paint" style={{ height: '40px', width: 'auto' }} />
+              </Link>
+              <button className="mobile-menu-close" onClick={() => setMobileMenuOpen(false)}>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="mobile-menu-content">
+              <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Главная</Link>
+              <Link to="/catalog" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Каталог</Link>
+              {categories.slice(0, 8).map(cat => (
+                <Link key={cat.id} to={`/catalog?category=${encodeURIComponent(cat.name)}`} className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
+                  {cat.name}
+                </Link>
+              ))}
+              <div className="mobile-menu-divider"></div>
+              <a href={`tel:${PHONE}`} className="mobile-menu-link mobile-menu-phone">
+                <Phone size={20} />
+                {PHONE_LABEL}
+              </a>
+              <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noreferrer" className="mobile-menu-link">
+                <MessageCircle size={20} />
+                WhatsApp
+              </a>
+              <a href={buildTelegramLink()} target="_blank" rel="noreferrer" className="mobile-menu-link">
+                <Send size={20} />
+                Telegram
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {modalOpen && selectedProduct && (
         <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
@@ -987,17 +1078,27 @@ function CatalogPage({ language, setLanguage, translations }) {
 
   // Fetch all data in one shot to avoid race condition with category counts
   useEffect(() => {
-    Promise.all([api.getCategories(), api.getProducts({ limit: 500, sort: 'id', order: 'ASC' })])
+    Promise.all([api.getCategories(), api.getProducts({ limit: 50, sort: 'id', order: 'ASC' })])
       .then(([cats, productsData]) => {
         const list = productsData.products || productsData
         const result = Array.isArray(list) ? list : []
         allProductsRef.current = result
         setProducts(result)
         setLoadError(null)
-        setCategories(cats.map(cat => ({
+        // Map categories with correct names, icons, and order
+        const mappedCategories = cats.map(cat => ({
           ...cat,
-          count: result.filter(p => isProductInCategory(p, cat)).length
-        })))
+          name: getCategoryNameById(cat.id) || cat.name,
+          icon: getCategoryIconById(cat.id) || cat.icon,
+          count: result.filter(p => Number(p.categoryId) === Number(cat.id)).length
+        }))
+        // Sort by CATEGORY_ORDER
+        const sortedCategories = mappedCategories.sort((a, b) => {
+          const aIndex = CATEGORY_ORDER.indexOf(Number(a.id))
+          const bIndex = CATEGORY_ORDER.indexOf(Number(b.id))
+          return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex)
+        })
+        setCategories(sortedCategories)
       })
       .catch(error => {
         console.error('Failed to load catalog data:', error)
@@ -1111,7 +1212,7 @@ function CatalogPage({ language, setLanguage, translations }) {
             <a href="#about">{t.about}</a>
             <a href="#delivery">{t.delivery}</a>
             <a href="#contacts">{t.contacts}</a>
-            <span className="topbar-phone">+996 312 00-00-00</span>
+            <span className="topbar-phone">{PHONE_LABEL}</span>
             <button onClick={() => setLanguage(language === 'ru' ? 'kg' : 'ru')} style={{ marginLeft: '16px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Globe size={12} />
               {language === 'ru' ? 'RU' : 'KG'}
@@ -1123,7 +1224,7 @@ function CatalogPage({ language, setLanguage, translations }) {
       <header>
         <div className="header-inner">
           <Link to="/" className="logo" onClick={() => setActiveCategory('all')}>
-            <span className="logo-us">УС</span><span className="logo-ta">ТА</span>
+            <img src="/logo.jpg" alt="Alina Paint" style={{ height: '40px', width: 'auto' }} />
           </Link>
           <div className="search-wrap">
             <input type="text" placeholder={t.searchPlaceholder} id="searchInput" value={searchQuery} onChange={handleSearch} onFocus={() => setSearchResultsOpen(searchQuery.length > 0)} />
