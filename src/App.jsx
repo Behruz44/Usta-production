@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate, useSearchParams, useParams } from 'react-router-dom'
 import { Menu, Search, MapPin, Phone, Globe, Clock, ChevronRight, Heart, X, Send, MessageCircle, Grid, Lock } from 'lucide-react'
 import gsap from 'gsap'
@@ -9,10 +9,10 @@ import './App.css'
 import { api } from './services/api'
 
 // Contact constants — edit here once to update everywhere
-const PHONE = '+996552107036'
-const PHONE_LABEL = '+996 552 10-70-36'
-const WA_NUMBER = '996552107036'
-const TG_USERNAME = 'moonyx11'
+const PHONE = '+996312000000'
+const PHONE_LABEL = '+996 312 00-00-00'
+const WA_NUMBER = '996312000000'
+const TG_USERNAME = 'usta_osh'
 
 function useDebounce(value, delay = 300) {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -89,8 +89,6 @@ const iconToEmoji = (icon) => {
     'Building': '🏗️',
     'Layers': '🧱',
     'Box': '📦',
-    'Palette': '🎨',
-    'Tool': '🔧',
   }
   return mapping[icon] || icon || '📦'
 }
@@ -99,41 +97,6 @@ const getLang = (obj, field, lang) => {
   if (!obj) return ''
   if (lang === 'kg') return obj[field + 'Kg'] || obj[field + 'Ru'] || obj[field] || ''
   return obj[field + 'Ru'] || obj[field] || ''
-}
-
-// Category ID to name mapping (correct names)
-const CATEGORY_ID_TO_NAME = {
-  1: 'Гипсокартон',
-  2: 'Сухие смеси',
-  3: 'Саморезы',
-  4: 'Профиль',
-  6: 'Инструменты',
-  7: 'Краски',
-  8: 'Утеплители',
-  9: 'Водоэмульсионная краска',
-}
-
-// Category ID to icon mapping
-const CATEGORY_ID_TO_ICON = {
-  1: 'Sheet',
-  2: 'Package',
-  3: 'Wrench',
-  4: 'Ruler',
-  6: 'Tool',
-  7: 'Palette',
-  8: 'Layers',
-  9: 'Paintbrush',
-}
-
-// Category order for display
-const CATEGORY_ORDER = [9, 7, 8, 1, 2, 3, 4, 6] // Водоэмульсионная краска, Краски, Утеплители, Гипсокартон, Сухие смеси, Саморезы, Профиль, Инструменты
-
-const getCategoryNameById = (categoryId) => {
-  return CATEGORY_ID_TO_NAME[Number(categoryId)] || ''
-}
-
-const getCategoryIconById = (categoryId) => {
-  return CATEGORY_ID_TO_ICON[Number(categoryId)] || 'Package'
 }
 
 // Protected Route Component
@@ -259,25 +222,26 @@ const translations = {
 }
 
 function App() {
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false)
+  const [language, setLanguage] = useState('ru')
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<HomePage setMegaMenuOpen={setMegaMenuOpen} megaMenuOpen={megaMenuOpen} language={language} setLanguage={setLanguage} translations={translations} />} />
+        <Route path="/catalog" element={<CatalogPage language={language} setLanguage={setLanguage} translations={translations} />} />
+        <Route path="/product/:id" element={<ProductDetailPage language={language} setLanguage={setLanguage} translations={translations} />} />
+        <Route path="/login" element={<LoginPage language={language} translations={translations} />} />
       </Routes>
     </Router>
   )
 }
 
-function HomePage() {
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false)
-  const [language, setLanguage] = useState('ru')
+function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, translations }) {
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
-  const [addressDropdownOpen, setAddressDropdownOpen] = useState(false)
   const [contactDropdownOpen, setContactDropdownOpen] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [addressDropdownOpen, setAddressDropdownOpen] = useState(false)
+  const [statsAnimated, setStatsAnimated] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -287,32 +251,21 @@ function HomePage() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
-  const [statsAnimated, setStatsAnimated] = useState(false)
   const navigate = useNavigate()
   const { toggle: toggleFav, isFav } = useFavorites()
 
   // Fetch all data in one shot — no race condition
   useEffect(() => {
-    Promise.all([api.getCategories(), api.getProducts({ limit: 50, sort: 'id', order: 'ASC' })])
+    Promise.all([api.getCategories(), api.getProducts({ limit: 500 })])
       .then(([cats, productsData]) => {
         const list = productsData.products || productsData
         const result = Array.isArray(list) ? list : []
         setProducts(result)
         setLoadError(null)
-        // Map categories with correct names, icons, and order
-        const mappedCategories = cats.map(cat => ({
+        setCategories(cats.map(cat => ({
           ...cat,
-          name: getCategoryNameById(cat.id) || cat.name,
-          icon: getCategoryIconById(cat.id) || cat.icon,
-          count: result.filter(p => Number(p.categoryId) === Number(cat.id)).length
-        }))
-        // Sort by CATEGORY_ORDER
-        const sortedCategories = mappedCategories.sort((a, b) => {
-          const aIndex = CATEGORY_ORDER.indexOf(Number(a.id))
-          const bIndex = CATEGORY_ORDER.indexOf(Number(b.id))
-          return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex)
-        })
-        setCategories(sortedCategories)
+          count: result.filter(p => isProductInCategory(p, cat)).length
+        })))
       })
       .catch(error => {
         console.error('Failed to load home data:', error)
@@ -513,7 +466,7 @@ function HomePage() {
             <a href="#about">{t.about}</a>
             <a href="#delivery">{t.delivery}</a>
             <a href="#contacts">{t.contacts}</a>
-            <span className="topbar-phone">{PHONE_LABEL}</span>
+            <span className="topbar-phone">+996 312 00-00-00</span>
             <div className="language-switcher" onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}>
               <Globe size={12} />
               {language === 'ru' ? 'RU' : 'KG'}
@@ -530,12 +483,8 @@ function HomePage() {
 
       <header>
         <div className="header-inner">
-          <button className="mobile-burger-btn" onClick={() => setMobileMenuOpen(true)}>
-            <Menu size={24} />
-          </button>
-
           <Link to="/" className="logo">
-            <img src="/logo.jpg" alt="Alina Paint" style={{ height: '40px', width: 'auto' }} />
+            <span className="logo-us">УС</span><span className="logo-ta">ТА</span>
           </Link>
 
           <div className="search-wrap">
@@ -637,23 +586,21 @@ function HomePage() {
             </button>
             {megaMenuOpen && (
               <div className="mega-menu open">
-                {categories.slice(0, 10).map((cat) => {
-                  const emoji = iconToEmoji(cat.icon);
-                  return (
-                    <Link key={cat.id} className="mega-link" to={`/catalog?category=${encodeURIComponent(cat.name)}`} onClick={() => setMegaMenuOpen(false)}>
-                      <div className="mega-link-icon" style={{ background: '#eff6ff' }}>{emoji}</div>
-                      {cat.name}
-                    </Link>
-                  );
-                })}
+                <Link className="mega-link" to="/catalog?category=Гипсокартон" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#eff6ff' }}>📋</div> Гипсокартон</Link>
+                <Link className="mega-link" to="/catalog?category=Сухие смеси" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#fef9ee' }}>🪣</div> Сухие смеси</Link>
+                <Link className="mega-link" to="/catalog?category=Саморезы" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#f0fdf4' }}>🔩</div> Саморезы</Link>
+                <Link className="mega-link" to="/catalog?category=Профиль" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#f5f3ff' }}>📐</div> Профиль</Link>
+                <Link className="mega-link" to="/catalog?category=Генераторы" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#fff1f2' }}>⚡</div> Генераторы</Link>
+                <Link className="mega-link" to="/catalog?category=Инструменты" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#ecfeff' }}>🔧</div> Инструменты</Link>
               </div>
             )}
           </div>
-          {categories.slice(0, 6).map((cat) => (
-            <Link key={cat.id} className="nav-link" to={`/catalog?category=${encodeURIComponent(cat.name)}`}>
-              {cat.name}
-            </Link>
-          ))}
+          <Link className="nav-link active" to="/catalog">{t.navGypsum}</Link>
+          <Link className="nav-link" to="/catalog">{t.navMixes}</Link>
+          <Link className="nav-link" to="/catalog">{t.navScrews}</Link>
+          <Link className="nav-link" to="/catalog">{t.navProfile}</Link>
+          <Link className="nav-link" to="/catalog">{t.navGenerators}</Link>
+          <Link className="nav-link" to="/catalog">{t.navTools}</Link>
         </div>
       </nav>
 
@@ -666,13 +613,12 @@ function HomePage() {
           <div className="hero-left">
             <div className="hero-pill reveal">
               <span className="hero-pill-dot"></span>
-              Официальный дилер Alina Paint
+              Официальный дилер KNAUF
             </div>
             <h1 className="reveal" style={{ animationDelay: '0.1s' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <span style={{ fontSize: 'clamp(32px, 6vw, 48px)' }}>🏠</span>
-                <span>Alina Paint —<br /><em>строительные</em><br />материалы в Оше</span>
-              </span>
+              Всё для<br />
+              <em>строительства</em><br />
+              и ремонта
             </h1>
             <p className="hero-sub reveal" style={{ animationDelay: '0.2s' }}>
               Гипсокартон, сухие смеси, профили, генераторы и инструменты — всё в одном месте. Качество проверено временем.
@@ -699,8 +645,8 @@ function HomePage() {
               </div>
               <div className="stat-divider"></div>
               <div className="stat-item">
-                <div className="stat-num">100<span>%</span></div>
-                <div className="stat-label">Гарантия</div>
+                <div className="stat-num">48<span>ч</span></div>
+                <div className="stat-label">Быстрая доставка</div>
               </div>
             </div>
           </div>
@@ -890,6 +836,13 @@ function HomePage() {
 
       <div className="trust-section">
         <div className="trust-grid">
+          <div className="trust-card reveal" data-num="01">
+            <div className="trust-icon">
+              🚚
+            </div>
+            <div className="trust-title">качественный товар 100%</div>
+            <div className="trust-desc">Доставляем смотря когда вам удобно и когда удобно</div>
+          </div>
           <div className="trust-card reveal" data-num="02" style={{ animationDelay: '0.1s' }}>
             <div className="trust-icon">
               🛡️
@@ -917,12 +870,14 @@ function HomePage() {
       <footer>
         <div className="footer-inner">
           <div>
-            <div className="footer-logo">
-              <img src="/logo.jpg" alt="Alina Paint" style={{ height: '50px', width: 'auto' }} />
-            </div>
+            <div className="footer-logo">УС<span>ТА</span></div>
             <div className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</div>
-            <div className="footer-contact"><MapPin size={14} /> Ош, ул. Строительная, 12</div>
-            <div className="footer-contact"><Phone size={14} /> {PHONE_LABEL}</div>
+          </div>
+          <div>
+            <div className="footer-col-title">Связь</div>
+            <a className="footer-link" href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noreferrer">WhatsApp</a>
+            <a className="footer-link" href={buildTelegramLink()} target="_blank" rel="noreferrer">Telegram</a>
+            <a className="footer-link" href={`tel:${PHONE}`}>Позвонить</a>
           </div>
           <div>
             <div className="footer-col-title">Каталог</div>
@@ -936,7 +891,6 @@ function HomePage() {
             <Link className="footer-link" to="#about">О нас</Link>
             <Link className="footer-link" to="#delivery">Доставка</Link>
             <Link className="footer-link" to="#">Гарантия</Link>
-            <Link className="footer-link" to="#contacts">Контакты</Link>
           </div>
           <div id="delivery">
             <div className="footer-col-title">Доставка</div>
@@ -944,61 +898,12 @@ function HomePage() {
               Доставляем по Ошу и области в течение 24-48 часов. Бесплатная доставка при заказе от 10,000 сом.
             </div>
           </div>
-          <div id="contacts">
-            <div className="footer-col-title">Контакты</div>
-            <div className="footer-contact"><MapPin size={14} /> Ош, ул. Строительная, 12</div>
-            <div className="footer-contact"><Phone size={14} /> {PHONE_LABEL}</div>
-          </div>
-          <div>
-            <div className="footer-col-title">Связь</div>
-            <a className="footer-link" href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noreferrer">WhatsApp</a>
-            <a className="footer-link" href={buildTelegramLink()} target="_blank" rel="noreferrer">Telegram</a>
-            <a className="footer-link" href={`tel:${PHONE}`}>Позвонить</a>
-          </div>
         </div>
         <div className="footer-bottom">
           <span>© 2024 УСТА. Все права защищены. Ош, Кыргызстан.</span>
           <span>Строительные материалы оптом и в розницу</span>
         </div>
       </footer>
-
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
-          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-menu-header">
-              <Link to="/" className="mobile-menu-logo" onClick={() => setMobileMenuOpen(false)}>
-                <img src="/logo.jpg" alt="Alina Paint" style={{ height: '40px', width: 'auto' }} />
-              </Link>
-              <button className="mobile-menu-close" onClick={() => setMobileMenuOpen(false)}>
-                <X size={24} />
-              </button>
-            </div>
-            <div className="mobile-menu-content">
-              <Link to="/" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Главная</Link>
-              <Link to="/catalog" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Каталог</Link>
-              {categories.slice(0, 8).map(cat => (
-                <Link key={cat.id} to={`/catalog?category=${encodeURIComponent(cat.name)}`} className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
-                  {cat.name}
-                </Link>
-              ))}
-              <div className="mobile-menu-divider"></div>
-              <a href={`tel:${PHONE}`} className="mobile-menu-link mobile-menu-phone">
-                <Phone size={20} />
-                {PHONE_LABEL}
-              </a>
-              <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noreferrer" className="mobile-menu-link">
-                <MessageCircle size={20} />
-                WhatsApp
-              </a>
-              <a href={buildTelegramLink()} target="_blank" rel="noreferrer" className="mobile-menu-link">
-                <Send size={20} />
-                Telegram
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
 
       {modalOpen && selectedProduct && (
         <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
@@ -1030,6 +935,10 @@ function HomePage() {
                   <span className="modal-spec-val" style={{ color: selectedProduct?.stock > 0 ? '#16a34a' : '#dc2626' }}>
                     {selectedProduct?.stock > 0 ? '✓ Есть в наличии' : '✗ Нет в наличии'}
                   </span>
+                </div>
+                <div className="modal-spec">
+                  <span className="modal-spec-key">Доставка</span>
+                  <span className="modal-spec-val">24–48 часов</span>
                 </div>
               </div>
               <div className="modal-price">{selectedProduct.price.toLocaleString()} <small>сом</small></div>
@@ -1078,27 +987,17 @@ function CatalogPage({ language, setLanguage, translations }) {
 
   // Fetch all data in one shot to avoid race condition with category counts
   useEffect(() => {
-    Promise.all([api.getCategories(), api.getProducts({ limit: 50, sort: 'id', order: 'ASC' })])
+    Promise.all([api.getCategories(), api.getProducts({ limit: 500 })])
       .then(([cats, productsData]) => {
         const list = productsData.products || productsData
         const result = Array.isArray(list) ? list : []
         allProductsRef.current = result
         setProducts(result)
         setLoadError(null)
-        // Map categories with correct names, icons, and order
-        const mappedCategories = cats.map(cat => ({
+        setCategories(cats.map(cat => ({
           ...cat,
-          name: getCategoryNameById(cat.id) || cat.name,
-          icon: getCategoryIconById(cat.id) || cat.icon,
-          count: result.filter(p => Number(p.categoryId) === Number(cat.id)).length
-        }))
-        // Sort by CATEGORY_ORDER
-        const sortedCategories = mappedCategories.sort((a, b) => {
-          const aIndex = CATEGORY_ORDER.indexOf(Number(a.id))
-          const bIndex = CATEGORY_ORDER.indexOf(Number(b.id))
-          return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex)
-        })
-        setCategories(sortedCategories)
+          count: result.filter(p => isProductInCategory(p, cat)).length
+        })))
       })
       .catch(error => {
         console.error('Failed to load catalog data:', error)
@@ -1110,12 +1009,24 @@ function CatalogPage({ language, setLanguage, translations }) {
       .finally(() => setLoading(false))
   }, [])
 
+  const handleCategoryFilter = useCallback((category) => {
+    setActiveCategory(category)
+    if (category === 'all') {
+      setProducts(allProductsRef.current)
+    } else {
+      const filtered = allProductsRef.current.filter(p => {
+        return isProductInCategory(p, category)
+      })
+      setProducts(filtered)
+    }
+  }, [])
+
   // Apply category filter from URL
   useEffect(() => {
     if (categoryFromUrl && products.length > 0) {
       handleCategoryFilter(categoryFromUrl)
     }
-  }, [categoryFromUrl, products.length])
+  }, [categoryFromUrl, products.length, handleCategoryFilter])
 
   const handleProductClick = (product) => {
     setSelectedProduct(product)
@@ -1167,18 +1078,6 @@ function CatalogPage({ language, setLanguage, translations }) {
       categoryName?.toLowerCase().includes(searchQuery.toLowerCase())
   }).slice(0, 5)
 
-  const handleCategoryFilter = (category) => {
-    setActiveCategory(category)
-    if (category === 'all') {
-      setProducts(allProductsRef.current)
-    } else {
-      const filtered = allProductsRef.current.filter(p => {
-        return isProductInCategory(p, category)
-      })
-      setProducts(filtered)
-    }
-  }
-
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.dropdown-wrap')) {
@@ -1212,7 +1111,7 @@ function CatalogPage({ language, setLanguage, translations }) {
             <a href="#about">{t.about}</a>
             <a href="#delivery">{t.delivery}</a>
             <a href="#contacts">{t.contacts}</a>
-            <span className="topbar-phone">{PHONE_LABEL}</span>
+            <span className="topbar-phone">+996 312 00-00-00</span>
             <button onClick={() => setLanguage(language === 'ru' ? 'kg' : 'ru')} style={{ marginLeft: '16px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Globe size={12} />
               {language === 'ru' ? 'RU' : 'KG'}
@@ -1224,7 +1123,7 @@ function CatalogPage({ language, setLanguage, translations }) {
       <header>
         <div className="header-inner">
           <Link to="/" className="logo" onClick={() => setActiveCategory('all')}>
-            <img src="/logo.jpg" alt="Alina Paint" style={{ height: '40px', width: 'auto' }} />
+            <span className="logo-us">УС</span><span className="logo-ta">ТА</span>
           </Link>
           <div className="search-wrap">
             <input type="text" placeholder={t.searchPlaceholder} id="searchInput" value={searchQuery} onChange={handleSearch} onFocus={() => setSearchResultsOpen(searchQuery.length > 0)} />

@@ -34,7 +34,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
   : process.env.NODE_ENV === 'production'
     ? ['https://usta.kg', 'https://www.usta.kg', 'https://admin.usta.kg']
-    : ['http://localhost:5173', 'http://localhost:3001', 'http://localhost:4173', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:3002'];
+    : ['http://localhost:5173', 'http://localhost:3001', 'http://localhost:4173', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:3002', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5178', 'http://localhost:5179'];
 
 app.use(cors({
   origin: (origin, callback) => {
