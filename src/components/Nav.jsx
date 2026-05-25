@@ -29,7 +29,7 @@ const Nav = () => {
     <nav className="nav">
       <div className="container nav-inner">
         <div className="nav-left">
-          <Link to="/" className="logo">ALINA<span> PAINT</span></Link>
+          <Link to="/" className="logo"><img src="/logo.jpg" alt="ALINA PAINT" /></Link>
         </div>
         <div className="nav-center">
           <div className="nav-links">

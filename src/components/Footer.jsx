@@ -18,7 +18,7 @@ const Footer = () => {
     <footer>
       <div className="container footer-inner">
         <div className="footer-brand">
-          <div className="footer-logo">ALINA<span> PAINT</span></div>
+          <div className="footer-logo"><img src="/logo.jpg" alt="ALINA PAINT" /></div>
           <p className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</p>
           <div className="footer-contacts">
             <div className="footer-contact">
