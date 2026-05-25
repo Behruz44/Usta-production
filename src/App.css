@@ -105,12 +105,20 @@ html {
 
 /* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
+  html {
+    font-size: 16px !important;
+  }
+
   .hero-inner {
     padding: 40px 16px !important;
   }
 
   .hero h1 {
-    font-size: clamp(20px, 6vw, 28px) !important;
+    font-size: clamp(24px, 6vw, 32px) !important;
+  }
+
+  .hero-sub {
+    font-size: 16px !important;
   }
 
   .hero-stats {
@@ -120,6 +128,19 @@ html {
 
   .hero-stats .stat-divider {
     display: none !important;
+  }
+
+  .topbar-inner,
+  .header-inner,
+  .nav-inner {
+    padding: 0 16px !important;
+  }
+
+  .header-inner {
+    height: auto !important;
+    flex-wrap: wrap !important;
+    padding: 12px 16px !important;
+    gap: 12px !important;
   }
 
   .nav-links {

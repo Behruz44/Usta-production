@@ -836,28 +836,21 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
 
       <div className="trust-section">
         <div className="trust-grid">
-          <div className="trust-card reveal" data-num="01">
-            <div className="trust-icon">
-              🚚
-            </div>
-            <div className="trust-title">качественный товар 100%</div>
-            <div className="trust-desc">Доставляем смотря когда вам удобно и когда удобно</div>
-          </div>
-          <div className="trust-card reveal" data-num="02" style={{ animationDelay: '0.1s' }}>
+          <div className="trust-card reveal" data-num="01" style={{ animationDelay: '0.1s' }}>
             <div className="trust-icon">
               🛡️
             </div>
             <div className="trust-title">Гарантия качества</div>
             <div className="trust-desc">Все товары сертифицированы и прошли проверку качества</div>
           </div>
-          <div className="trust-card reveal" data-num="03" style={{ animationDelay: '0.2s' }}>
+          <div className="trust-card reveal" data-num="02" style={{ animationDelay: '0.2s' }}>
             <div className="trust-icon">
               💬
             </div>
             <div className="trust-title">WhatsApp заказ</div>
             <div className="trust-desc">Пишите нам в WhatsApp — ответим быстро и поможем с выбором</div>
           </div>
-          <div className="trust-card reveal" data-num="04" style={{ animationDelay: '0.3s' }}>
+          <div className="trust-card reveal" data-num="03" style={{ animationDelay: '0.3s' }}>
             <div className="trust-icon">
               💰
             </div>
