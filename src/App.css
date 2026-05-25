@@ -296,32 +296,68 @@ section {
     font-size: clamp(18px, 5vw, 24px) !important;
   }
 
-  .hero h1 span span {
-    font-size: clamp(24px, 6vw, 32px) !important;
+  .footer-col-title {
+    text-align: left !important;
   }
 
-  .hero-sub {
-    font-size: 13px !important;
+  .footer-link {
+    text-align: left !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+  }
+}
+
+/* Extra Small Mobile (max-width: 262px) */
+@media (max-width: 262px) {
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .hero-cta {
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  .btn-hero {
+  body,
+  .page-transition-enter {
+    overflow-x: hidden !important;
     width: 100% !important;
   }
 
-  .section-inner {
-    padding: 12px !important;
+  .topbar-inner,
+  .header-inner,
+  .nav-inner,
+  .hero-inner,
+  .section-inner,
+  .footer-inner,
+  .footer-bottom-inner {
+    padding: 8px !important;
+    width: 100% !important;
   }
 
-  .products-grid {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
+  .topbar-right,
+  .header-actions {
+    flex-direction: column !important;
+    gap: 4px !important;
   }
 
+  .topbar-right a,
+  .topbar-phone,
+  .header-actions .btn {
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+  }
+
+  .footer-col-title {
+    font-size: 12px !important;
+    text-align: left !important;
+  }
+
+  .footer-link {
+    font-size: 11px !important;
+    text-align: left !important;
+    padding: 4px 0 !important;
+  }
+}
+
+/* Responsive Design - Mobile & Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
   .categories-grid {
     grid-template-columns: 1fr !important;
     gap: 10px !important;
@@ -375,11 +411,11 @@ section {
   .modal-btn {
     width: 100% !important;
   }
+}
 
-  /* Section gaps */
-  section {
-    padding: 20px 0 !important;
-  }
+/* Section gaps */
+section {
+  padding: 20px 0 !important;
 }
 
 html {
