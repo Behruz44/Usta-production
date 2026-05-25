@@ -356,6 +356,65 @@ section {
   }
 }
 
+/* Ultra Small Mobile (max-width: 200px) */
+@media (max-width: 200px) {
+  html {
+    font-size: 12px !important;
+  }
+
+  body,
+  .page-transition-enter {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    min-width: 200px !important;
+  }
+
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .topbar-inner,
+  .header-inner,
+  .nav-inner,
+  .hero-inner,
+  .section-inner,
+  .footer-inner,
+  .footer-bottom-inner {
+    padding: 4px !important;
+    width: 100% !important;
+  }
+
+  .topbar-right,
+  .header-actions {
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .topbar-right a,
+  .topbar-phone,
+  .header-actions .btn {
+    font-size: 9px !important;
+    padding: 2px 4px !important;
+  }
+
+  .logo img {
+    height: 24px !important;
+  }
+
+  .hero h1 {
+    font-size: 14px !important;
+  }
+
+  .footer-col-title {
+    font-size: 10px !important;
+  }
+
+  .footer-link {
+    font-size: 9px !important;
+  }
+}
+
 /* Responsive Design - Mobile & Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
   .categories-grid {
