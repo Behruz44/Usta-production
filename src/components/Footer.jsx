@@ -18,7 +18,7 @@ const Footer = () => {
     <footer>
       <div className="container footer-inner">
         <div className="footer-brand">
-          <div className="footer-logo">УС<span>ТА</span></div>
+          <div className="footer-logo">ALINA<span> PAINT</span></div>
           <p className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</p>
           <div className="footer-contacts">
             <div className="footer-contact">
@@ -55,7 +55,7 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <div className="container footer-bottom-inner">
-          <span>© 2024 УСТА. Все права защищены. Ош, Кыргызстан.</span>
+          <span>© 2024 ALINA PAINT. Все права защищены. Ош, Кыргызстан.</span>
           <span>Строительные материалы оптом и в розницу</span>
         </div>
       </div>

@@ -484,7 +484,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
       <header>
         <div className="header-inner">
           <Link to="/" className="logo">
-            <span className="logo-us">УС</span><span className="logo-ta">ТА</span>
+            <span className="logo-us">ALINA</span><span className="logo-ta"> PAINT</span>
           </Link>
 
           <div className="search-wrap">
@@ -613,7 +613,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           <div className="hero-left">
             <div className="hero-pill reveal">
               <span className="hero-pill-dot"></span>
-              Официальный дилер KNAUF
+              Официальный дилер Alina Group
             </div>
             <h1 className="reveal" style={{ animationDelay: '0.1s' }}>
               Всё для<br />
@@ -870,7 +870,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
       <footer>
         <div className="footer-inner">
           <div>
-            <div className="footer-logo">УС<span>ТА</span></div>
+            <div className="footer-logo">ALINA<span> PAINT</span></div>
             <div className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</div>
           </div>
           <div>
@@ -900,7 +900,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2024 УСТА. Все права защищены. Ош, Кыргызстан.</span>
+          <span>© 2024 ALINA PAINT. Все права защищены. Ош, Кыргызстан.</span>
           <span>Строительные материалы оптом и в розницу</span>
         </div>
       </footer>
@@ -1123,7 +1123,7 @@ function CatalogPage({ language, setLanguage, translations }) {
       <header>
         <div className="header-inner">
           <Link to="/" className="logo" onClick={() => setActiveCategory('all')}>
-            <span className="logo-us">УС</span><span className="logo-ta">ТА</span>
+            <span className="logo-us">ALINA</span><span className="logo-ta"> PAINT</span>
           </Link>
           <div className="search-wrap">
             <input type="text" placeholder={t.searchPlaceholder} id="searchInput" value={searchQuery} onChange={handleSearch} onFocus={() => setSearchResultsOpen(searchQuery.length > 0)} />
@@ -1454,7 +1454,7 @@ function ProductDetailPage({ language, setLanguage, translations }) {
 
       <header>
         <div className="header-inner">
-          <Link to="/" className="logo">УС<span>ТА</span></Link>
+          <Link to="/" className="logo">ALINA<span> PAINT</span></Link>
           <div className="search-bar">
             <input type="text" placeholder="Поиск по каталогу товаров..." />
             <Search className="search-icon" size={18} />
@@ -1583,7 +1583,7 @@ function LoginPage({ language, translations }) {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '20px' }}>
       <div style={{ background: '#fff', borderRadius: '16px', padding: '40px', maxWidth: '400px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '28px', fontWeight: '800', color: '#0b121f', marginBottom: '8px' }}>УСТА</div>
+          <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '28px', fontWeight: '800', color: '#0b121f', marginBottom: '8px' }}>ALINA PAINT</div>
           <div style={{ fontSize: '14px', color: '#64748b' }}>Вход в админ-панель</div>
         </div>
 

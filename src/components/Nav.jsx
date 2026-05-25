@@ -29,7 +29,7 @@ const Nav = () => {
     <nav className="nav">
       <div className="container nav-inner">
         <div className="nav-left">
-          <Link to="/" className="logo">УС<span>ТА</span></Link>
+          <Link to="/" className="logo">ALINA<span> PAINT</span></Link>
         </div>
         <div className="nav-center">
           <div className="nav-links">

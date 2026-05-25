@@ -28,7 +28,7 @@ const Header = ({ onContactClick }) => {
               <polyline points="9 22 9 12 15 12 15 22" />
             </svg>
           </div>
-          УС<span>ТА</span>
+          ALINA<span> PAINT</span>
         </a>
 
         <div className="search-bar">
