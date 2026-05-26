@@ -466,7 +466,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
             <a href="#about">{t.about}</a>
             <a href="#delivery">{t.delivery}</a>
             <a href="#contacts">{t.contacts}</a>
-            <span className="topbar-phone">+996 312 00-00-00</span>
+            <span className="topbar-phone">{PHONE_LABEL}</span>
             <div className="language-switcher" onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}>
               <Globe size={12} />
               {language === 'ru' ? 'RU' : 'KG'}
@@ -1104,7 +1104,7 @@ function CatalogPage({ language, setLanguage, translations }) {
             <a href="#about">{t.about}</a>
             <a href="#delivery">{t.delivery}</a>
             <a href="#contacts">{t.contacts}</a>
-            <span className="topbar-phone">+996 312 00-00-00</span>
+            <span className="topbar-phone">{PHONE_LABEL}</span>
             <button onClick={() => setLanguage(language === 'ru' ? 'kg' : 'ru')} style={{ marginLeft: '16px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Globe size={12} />
               {language === 'ru' ? 'RU' : 'KG'}
