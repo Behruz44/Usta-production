@@ -456,7 +456,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
         <div className="topbar-inner">
           <div className="topbar-left">
             <Clock size={13} />
-            Пн–Сб: 09:00 – 19:00
+            Пн–Сб (Кроме Пт): 09:00 – 19:00
             <span style={{ marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
               <MapPin size={13} />
               {t.location}
@@ -538,7 +538,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
                   <div className="drop-item">
                     <div className="drop-icon green"><Lock size={16} /></div>
                     <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink)' }}>Пн–Сб</div>
+                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink)' }}>Пн–Сб (Кроме Пт)</div>
                       <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>09:00 – 19:00</div>
                     </div>
                   </div>
@@ -1094,7 +1094,7 @@ function CatalogPage({ language, setLanguage, translations }) {
         <div className="topbar-inner">
           <div className="topbar-left">
             <Clock size={13} />
-            Пн–Сб: 09:00 – 19:00
+            Пн–Сб (Кроме Пт): 09:00 – 19:00
             <span style={{ marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
               <MapPin size={13} />
               {t.location}
@@ -1168,7 +1168,7 @@ function CatalogPage({ language, setLanguage, translations }) {
                   <div className="drop-item">
                     <div className="drop-icon green"><Lock size={16} /></div>
                     <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink)' }}>Пн–Сб</div>
+                      <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink)' }}>Пн–Сб (Кроме Пт)</div>
                       <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>09:00 – 19:00</div>
                     </div>
                   </div>
