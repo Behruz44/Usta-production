@@ -397,7 +397,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
 
     // Stats counter animation
     const statsTimer = setTimeout(() => {
-      animateValue('stat-1', 0, 2400, 2000)
+      animateValue('stat-1', 0, products.length || 2400, 2000)
       animateValue('stat-2', 0, 12, 1500)
       const stat3 = document.getElementById('stat-3')
       if (stat3) {
@@ -405,7 +405,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
         stat3.style.transition = 'opacity 0.5s ease'
         setTimeout(() => {
           stat3.style.opacity = '1'
-          stat3.innerHTML = '48ч'
+          stat3.innerHTML = '100<span>%</span>'
         }, 100)
       }
       setStatsAnimated(true)
@@ -456,7 +456,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
         <div className="topbar-inner">
           <div className="topbar-left">
             <Clock size={13} />
-            Пн–Сб (Кроме Пт): 09:00 – 19:00
+            Пн–Сб (Кроме Пт): 09:00 – 18:00
             <span style={{ marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
               <MapPin size={13} />
               {t.location}
@@ -539,7 +539,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
                     <div className="drop-icon green"><Lock size={16} /></div>
                     <div>
                       <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink)' }}>Пн–Сб (Кроме Пт)</div>
-                      <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>09:00 – 19:00</div>
+                      <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>09:00 – 18:00</div>
                     </div>
                   </div>
                 </div>
@@ -635,18 +635,18 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
             </div>
             <div className="hero-stats reveal" style={{ animationDelay: '0.4s' }}>
               <div className="stat-item">
-                <div className="stat-num">2<span>400</span></div>
+                <div className="stat-num" id="stat-1">{products.length || '2<span>400</span>'}</div>
                 <div className="stat-label">Товаров в каталоге</div>
               </div>
               <div className="stat-divider"></div>
               <div className="stat-item">
-                <div className="stat-num">12<span>+</span></div>
+                <div className="stat-num" id="stat-2">12<span>+</span></div>
                 <div className="stat-label">Лет на рынке</div>
               </div>
               <div className="stat-divider"></div>
               <div className="stat-item">
-                <div className="stat-num">48<span>ч</span></div>
-                <div className="stat-label">Быстрая доставка</div>
+                <div className="stat-num" id="stat-3">100<span>%</span></div>
+                <div className="stat-label">Гарантия качества</div>
               </div>
             </div>
           </div>
@@ -1094,7 +1094,7 @@ function CatalogPage({ language, setLanguage, translations }) {
         <div className="topbar-inner">
           <div className="topbar-left">
             <Clock size={13} />
-            Пн–Сб (Кроме Пт): 09:00 – 19:00
+            Пн–Сб (Кроме Пт): 09:00 – 18:00
             <span style={{ marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
               <MapPin size={13} />
               {t.location}
@@ -1169,7 +1169,7 @@ function CatalogPage({ language, setLanguage, translations }) {
                     <div className="drop-icon green"><Lock size={16} /></div>
                     <div>
                       <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink)' }}>Пн–Сб (Кроме Пт)</div>
-                      <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>09:00 – 19:00</div>
+                      <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>09:00 – 18:00</div>
                     </div>
                   </div>
                 </div>

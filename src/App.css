@@ -878,6 +878,12 @@ header.scrolled {
   align-items: center;
 }
 
+.logo img {
+  max-height: 48px;
+  width: auto;
+  display: block;
+}
+
 .search-wrap {
   flex: 1;
   max-width: 600px;
@@ -2769,6 +2775,12 @@ footer {
   margin-bottom: 16px;
 }
 
+.footer-logo img {
+  max-height: 36px;
+  width: auto;
+  display: block;
+}
+
 .footer-logo span {
   color: var(--blue-light);
 }
@@ -2868,6 +2880,12 @@ footer {
   letter-spacing: -1px;
   color: #fff;
   margin-bottom: 16px;
+}
+
+.footer-logo img {
+  max-height: 40px;
+  width: auto;
+  display: block;
 }
 
 .footer-logo span {
