@@ -23,7 +23,7 @@ const Footer = () => {
           <div className="footer-contacts">
             <div className="footer-contact">
               <Phone size={14} />
-              +996 552 10-70-36
+              +996 555 09-53-56
             </div>
             <div className="footer-contact">
               <MapPin size={14} />
@@ -48,9 +48,9 @@ const Footer = () => {
         </div>
         <div className="footer-col">
           <div className="footer-col-title">Связь</div>
-          <a href="https://wa.me/996552107036" className="footer-link" target="_blank">WhatsApp</a>
+          <a href="https://wa.me/996555095356" className="footer-link" target="_blank">WhatsApp</a>
           <a href="https://t.me/moonyx11" className="footer-link" target="_blank">Telegram</a>
-          <a href="tel:+996552107036" className="footer-link">Позвонить</a>
+          <a href="tel:+996555095356" className="footer-link">Позвонить</a>
         </div>
       </div>
       <div className="footer-bottom">

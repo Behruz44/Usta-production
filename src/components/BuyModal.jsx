@@ -18,13 +18,13 @@ const BuyModal = ({ isOpen, onClose, product }) => {
         </div>
         <h3 className="contact-modal-title" style={{ marginTop: '8px' }}>Купить товар</h3>
         <p className="contact-modal-sub">Выберите способ связи для заказа</p>
-        <a href="tel:+996552107036" className="contact-btn phone-btn">
+        <a href="tel:+996555095356" className="contact-btn phone-btn">
           <Phone size={20} />
-          Позвонить: +996 552 10-70-36
+          Позвонить: +996 555 09-53-56
         </a>
         <div className="contact-divider"><span>или написать</span></div>
         <div className="contact-messengers">
-          <a href={`https://wa.me/996552107036?text=${whatsappMessage}`} target="_blank" className="messenger-btn whatsapp-btn">
+          <a href={`https://wa.me/996555095356?text=${whatsappMessage}`} target="_blank" className="messenger-btn whatsapp-btn">
             <MessageCircle size={24} />
             WhatsApp
           </a>

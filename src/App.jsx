@@ -9,9 +9,9 @@ import './App.css'
 import { api } from './services/api'
 
 // Contact constants — edit here once to update everywhere
-const PHONE = '+996552107036'
-const PHONE_LABEL = '+996 552 10-70-36'
-const WA_NUMBER = '996552107036'
+const PHONE = '+996555095356'
+const PHONE_LABEL = '+996 555 09-53-56'
+const WA_NUMBER = '996555095356'
 const TG_USERNAME = 'moonyx11'
 
 function useDebounce(value, delay = 300) {
@@ -1354,7 +1354,7 @@ function CatalogPage({ language, setLanguage, translations }) {
                     <Send size={16} />
                     Telegram
                   </a>
-                  <button className="modal-btn modal-btn-main" onClick={() => { window.location.href = `tel:+996552107036`; }}>
+                  <button className="modal-btn modal-btn-main" onClick={() => { window.location.href = `tel:${PHONE}`; }}>
                     <Phone size={16} />
                     Позвонить
                   </button>
