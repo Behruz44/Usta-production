@@ -242,7 +242,10 @@ html {
 
   .modal {
     max-width: 95% !important;
-    max-height: 90vh !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .modal-inner {
@@ -251,18 +254,27 @@ html {
 
   .modal-img-side {
     width: 100% !important;
-    height: 250px !important;
+    height: 180px !important;
+    min-height: 180px !important;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
-    padding: 24px !important;
+    padding: 16px !important;
     display: flex !important;
+    flex-shrink: 0 !important;
   }
 
   .modal-body {
     padding: 16px !important;
+    flex: 1 1 auto !important;
+    overflow-y: visible !important;
   }
 
   .modal-actions {
     flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .modal-btn {
+    width: 100% !important;
   }
 }
 
@@ -465,10 +477,15 @@ section {
     width: 100% !important;
     border-radius: 0 !important;
     max-height: 100vh !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .modal-body {
     padding: 16px !important;
+    flex: 1 1 auto !important;
+    overflow-y: visible !important;
   }
 
   .modal-actions {
