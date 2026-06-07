@@ -373,7 +373,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
 
     // Stats counter animation
     const statsTimer = setTimeout(() => {
-      animateValue('stat-1', 0, products.length || 2400, 2000)
+      animateValue('stat-1', 0, products.length, 2000)
       animateValue('stat-2', 0, 12, 1500)
       const stat3 = document.getElementById('stat-3')
       if (stat3) {
@@ -868,14 +868,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           <div id="about">
             <div className="footer-col-title">Компания</div>
             <Link className="footer-link" to="#about">О нас</Link>
-            <Link className="footer-link" to="#delivery">Доставка</Link>
             <Link className="footer-link" to="#">Гарантия</Link>
-          </div>
-          <div id="delivery">
-            <div className="footer-col-title">Доставка</div>
-            <div className="footer-desc" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: '1.6' }}>
-              Доставляем по Ошу и области в течение 24-48 часов. Бесплатная доставка при заказе от 10,000 сом.
-            </div>
           </div>
         </div>
         <div className="footer-bottom">
