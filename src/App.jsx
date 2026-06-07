@@ -118,7 +118,7 @@ const translations = {
     call: 'Связаться',
     catalog: 'Каталог',
     heroTitle: 'Всё для вашего <em>строительства</em> и ремонта',
-    heroDesc: 'Гипсокартон, сухие смеси, профили, генераторы и инструменты — всё в одном месте. Качество проверено временем.',
+    heroDesc: 'Строительные материалы и инструменты — всё в одном месте. Качество проверено временем.',
     viewCatalog: 'Смотреть каталог',
     callUs: 'Позвонить нам',
     catalogLabel: 'Каталог',
@@ -144,18 +144,6 @@ const translations = {
     description: 'Описание',
     price: 'Цена',
     image: 'Изображение',
-    navGypsum: 'Гипсокартон',
-    navMixes: 'Сухие смеси',
-    navScrews: 'Саморезы',
-    navProfile: 'Профиль',
-    navGenerators: 'Генераторы',
-    navTools: 'Инструменты',
-    catGypsum: 'Гипсокартон',
-    catMixes: 'Сухие смеси',
-    catScrews: 'Саморезы',
-    catProfile: 'Профиль',
-    catGenerators: 'Генераторы',
-    catTools: 'Инструменты',
     filterWall: 'Настенный',
     filterCeiling: 'Потолочный',
     filterMoisture: 'Влагостойкий',
@@ -173,7 +161,7 @@ const translations = {
     call: 'Байланышуу',
     catalog: 'Каталог',
     heroTitle: 'Сиздин <em>курулуш</em> жана оңдоп-түзөөңүз үчүн баары',
-    heroDesc: 'Гипсокартон, кургак аралашмалар, профилдер, генераторлор жана аспаптар — баары бир жерде. Сапаты убакыт менен текшерилди.',
+    heroDesc: 'Курулуш материалдары жана аспаптары — баары бир жерде. Сапаты убакыт менен текшерилди.',
     viewCatalog: 'Каталогду көрүү',
     callUs: 'Бизге чалыңыз',
     catalogLabel: 'Каталог',
@@ -199,18 +187,6 @@ const translations = {
     description: 'Баяндама',
     price: 'Баа',
     image: 'Сүрөт',
-    navGypsum: 'Гипсокартон',
-    navMixes: 'Кургак аралашмалар',
-    navScrews: 'Өзөктөр',
-    navProfile: 'Профиль',
-    navGenerators: 'Генераторлор',
-    navTools: 'Аспаптар',
-    catGypsum: 'Гипсокартон',
-    catMixes: 'Кургак аралашмалар',
-    catScrews: 'Өзөктөр',
-    catProfile: 'Профиль',
-    catGenerators: 'Генераторлор',
-    catTools: 'Аспаптар',
     filterWall: 'Дубалдык',
     filterCeiling: 'Тосмолук',
     filterMoisture: 'Нымдуулукка каршы',
@@ -586,21 +562,28 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
             </button>
             {megaMenuOpen && (
               <div className="mega-menu open">
-                <Link className="mega-link" to="/catalog?category=Гипсокартон" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#eff6ff' }}>📋</div> Гипсокартон</Link>
-                <Link className="mega-link" to="/catalog?category=Сухие смеси" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#fef9ee' }}>🪣</div> Сухие смеси</Link>
-                <Link className="mega-link" to="/catalog?category=Саморезы" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#f0fdf4' }}>🔩</div> Саморезы</Link>
-                <Link className="mega-link" to="/catalog?category=Профиль" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#f5f3ff' }}>📐</div> Профиль</Link>
-                <Link className="mega-link" to="/catalog?category=Генераторы" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#fff1f2' }}>⚡</div> Генераторы</Link>
-                <Link className="mega-link" to="/catalog?category=Инструменты" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#ecfeff' }}>🔧</div> Инструменты</Link>
+                {categories.length === 0 ? (
+                  <div style={{ padding: '16px', color: 'var(--muted)' }}>Загрузка...</div>
+                ) : (
+                  <>
+                    <Link className="mega-link" to="/catalog" onClick={() => setMegaMenuOpen(false)}><div className="mega-link-icon" style={{ background: '#eff6ff' }}>�</div> Все категории</Link>
+                    {categories.map(cat => (
+                      <Link key={cat.id} className="mega-link" to={`/catalog?category=${encodeURIComponent(cat.name)}`} onClick={() => setMegaMenuOpen(false)}>
+                        <div className="mega-link-icon" style={{ background: '#f8fafc' }}>{iconToEmoji(cat.icon)}</div> {cat.name}
+                      </Link>
+                    ))}
+                  </>
+                )}
               </div>
             )}
           </div>
-          <Link className="nav-link active" to="/catalog">{t.navGypsum}</Link>
-          <Link className="nav-link" to="/catalog">{t.navMixes}</Link>
-          <Link className="nav-link" to="/catalog">{t.navScrews}</Link>
-          <Link className="nav-link" to="/catalog">{t.navProfile}</Link>
-          <Link className="nav-link" to="/catalog">{t.navGenerators}</Link>
-          <Link className="nav-link" to="/catalog">{t.navTools}</Link>
+          {categories.length === 0 ? (
+            <span style={{ color: 'var(--muted)', padding: '8px 12px' }}>Загрузка...</span>
+          ) : (
+            categories.slice(0, 6).map((cat, idx) => (
+              <Link key={cat.id} className={`nav-link${idx === 0 ? ' active' : ''}`} to={`/catalog?category=${encodeURIComponent(cat.name)}`}>{cat.name}</Link>
+            ))
+          )}
         </div>
       </nav>
 
@@ -621,7 +604,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
               и ремонта
             </h1>
             <p className="hero-sub reveal" style={{ animationDelay: '0.2s' }}>
-              Гипсокартон, сухие смеси, профили, генераторы и инструменты — всё в одном месте. Качество проверено временем.
+              {t.heroDesc}
             </p>
             <div className="hero-cta reveal" style={{ animationDelay: '0.3s' }}>
               <Link to="/catalog" className="btn-hero btn-hero-primary">
@@ -864,7 +847,7 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
         <div className="footer-inner">
           <div>
             <div className="footer-logo"><img src="/logo.jpg" alt="ALINA PAINT" /></div>
-            <div className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, более 2400 товаров в наличии.</div>
+            <div className="footer-desc">Строительные материалы и инструменты в Оше. Работаем с 2012 года, широкий ассортимент товаров в наличии.</div>
           </div>
           <div>
             <div className="footer-col-title">Связь</div>
@@ -874,10 +857,13 @@ function HomePage({ setMegaMenuOpen, megaMenuOpen, language, setLanguage, transl
           </div>
           <div>
             <div className="footer-col-title">Каталог</div>
-            <Link className="footer-link" to="/catalog">Гипсокартон</Link>
-            <Link className="footer-link" to="/catalog">Сухие смеси</Link>
-            <Link className="footer-link" to="/catalog">Саморезы</Link>
-            <Link className="footer-link" to="/catalog">Профиль</Link>
+            {categories.length === 0 ? (
+              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>Загрузка...</span>
+            ) : (
+              categories.slice(0, 6).map(cat => (
+                <Link key={cat.id} className="footer-link" to={`/catalog?category=${encodeURIComponent(cat.name)}`}>{cat.name}</Link>
+              ))
+            )}
           </div>
           <div id="about">
             <div className="footer-col-title">Компания</div>
