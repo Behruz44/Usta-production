@@ -31,7 +31,7 @@ const ContactModal = ({ isOpen, onClose }) => {
         </div>
         <div className="contact-address">
           <MapPin size={14} />
-          Ош, ул. Строительная, 12. Пн–Сб 8:00–18:00
+          Ош, ул. Строительная, 12. Пн-Вс 09:00–18:00
         </div>
       </div>
     </div>
